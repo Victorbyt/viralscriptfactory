@@ -1,0 +1,269 @@
+<!-- frontend/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViralScriptFactory - Instant TikTok/Reels Scripts</title>
+    <meta name="description" content="Generate viral TikTok, Reels, and YouTube Shorts scripts in 60 seconds. First script free!">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://js.stripe.com/v3/"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+                <span>ViralScriptFactory</span>
+            </div>
+            <div class="nav-links">
+                <a href="#how-it-works">How It Works</a>
+                <a href="#testimonials">Testimonials</a>
+                <button class="btn-outline" onclick="scrollToGenerator()">Generate Now</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Generate <span class="highlight">Viral Scripts</span> in 60 Seconds</h1>
+                <p class="subtitle">Turn any idea into 3 TikTok/Reels/Shorts scripts with trending sounds, hooks, and hashtags. First script free!</p>
+                
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-number">5,000+</div>
+                        <div class="stat-label">Scripts Generated</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">97%</div>
+                        <div class="stat-label">Satisfaction Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">$5</div>
+                        <div class="stat-label">Only Per Set</div>
+                    </div>
+                </div>
+
+                <!-- Generator Form -->
+                <div class="generator-card" id="generator">
+                    <div class="step-indicator">
+                        <div class="step active" id="step1-indicator">1. Topic</div>
+                        <div class="step" id="step2-indicator">2. Preview</div>
+                        <div class="step" id="step3-indicator">3. Payment</div>
+                        <div class="step" id="step4-indicator">4. Results</div>
+                    </div>
+
+                    <!-- STEP 1: Input -->
+                    <div id="step1" class="step-content active">
+                        <h2>What's your topic?</h2>
+                        <div class="form-group">
+                            <input type="text" id="topic" placeholder="e.g., fitness tips, crypto news, cooking hacks" autocomplete="off">
+                            <div class="topic-examples">
+                                <span class="example-tag" onclick="setTopic('fitness')">🏋️ Fitness</span>
+                                <span class="example-tag" onclick="setTopic('cooking')">👨‍🍳 Cooking</span>
+                                <span class="example-tag" onclick="setTopic('crypto')">💰 Crypto</span>
+                                <span class="example-tag" onclick="setTopic('business')">💼 Business</span>
+                                <span class="example-tag" onclick="setTopic('comedy')">😂 Comedy</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Select Platform:</label>
+                            <div class="platform-selector">
+                                <label class="platform-option">
+                                    <input type="radio" name="platform" value="tiktok" checked>
+                                    <div class="platform-card">
+                                        <i class="fab fa-tiktok"></i>
+                                        <span>TikTok</span>
+                                    </div>
+                                </label>
+                                <label class="platform-option">
+                                    <input type="radio" name="platform" value="reels">
+                                    <div class="platform-card">
+                                        <i class="fab fa-instagram"></i>
+                                        <span>Reels</span>
+                                    </div>
+                                </label>
+                                <label class="platform-option">
+                                    <input type="radio" name="platform" value="shorts">
+                                    <div class="platform-card">
+                                        <i class="fab fa-youtube"></i>
+                                        <span>Shorts</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button class="btn-primary" onclick="generateScripts()">
+                            <i class="fas fa-magic"></i> Generate 3 Scripts ($5)
+                        </button>
+                        <p class="note"><i class="fas fa-lock"></i> First script free preview. Pay only if you want all 3.</p>
+                    </div>
+
+                    <!-- STEP 2: Preview -->
+                    <div id="step2" class="step-content">
+                        <h2>Your First Script (Free Preview)</h2>
+                        <div class="script-preview" id="previewScript">
+                            <!-- Script will appear here -->
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn-success" onclick="showPayment()">
+                                <i class="fas fa-unlock"></i> Unlock All 3 Scripts - $5
+                            </button>
+                            <button class="btn-outline" onclick="backToStep1()">
+                                <i class="fas fa-redo"></i> Try Different Topic
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: Payment -->
+                    <div id="step3" class="step-content">
+                        <h2>Complete Payment</h2>
+                        <div class="payment-methods">
+                            <div class="payment-tabs">
+                                <button class="payment-tab active" onclick="showStripePayment()">Card</button>
+                                <button class="payment-tab" onclick="showPayPalPayment()">PayPal</button>
+                                <button class="payment-tab" onclick="showCryptoPayment()">Crypto</button>
+                            </div>
+                            
+                            <div id="stripe-payment">
+                                <div id="stripe-payment-element"></div>
+                                <button class="btn-primary" onclick="processStripePayment()">
+                                    <i class="fas fa-credit-card"></i> Pay $5 & Get All Scripts
+                                </button>
+                            </div>
+                            
+                            <div id="paypal-payment" style="display: none;">
+                                <div id="paypal-button-container"></div>
+                            </div>
+                            
+                            <div id="crypto-payment" style="display: none;">
+                                <div class="crypto-address">
+                                    <p>Send exactly $5 USD in USDT (TRC-20) to:</p>
+                                    <code class="address">TXYZ1234567890abcdefghijklmnopqrstuvw</code>
+                                    <button class="btn-outline" onclick="copyAddress()">Copy Address</button>
+                                    <p class="note">After payment, email receipt to scripts@viralscriptfactory.com</p>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="security-note">
+                            <i class="fas fa-shield-alt"></i> Secure payment. 7-day money-back guarantee.
+                        </p>
+                    </div>
+
+                    <!-- STEP 4: Results -->
+                    <div id="step4" class="step-content">
+                        <h2><i class="fas fa-party-horn"></i> Your 3 Viral Scripts!</h2>
+                        <div class="scripts-container" id="allScripts">
+                            <!-- All scripts will appear here -->
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn-success" onclick="downloadScripts()">
+                                <i class="fas fa-download"></i> Download as PDF
+                            </button>
+                            <button class="btn-outline" onclick="shareOnTwitter()">
+                                <i class="fab fa-twitter"></i> Share on Twitter
+                            </button>
+                            <button class="btn-primary" onclick="newScript()">
+                                <i class="fas fa-plus"></i> Generate More ($5)
+                            </button>
+                        </div>
+                        <div class="upsell">
+                            <h3>Want Unlimited Scripts?</h3>
+                            <p>Get unlimited script generation for just $19/month</p>
+                            <button class="btn-upsell" onclick="showSubscription()">Upgrade Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step-item">
+                    <div class="step-icon">1</div>
+                    <h3>Enter Topic</h3>
+                    <p>Tell us what you want to create content about. Any niche works!</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-icon">2</div>
+                    <h3>Get Free Preview</h3>
+                    <p>See your first script completely free. No commitment.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-icon">3</div>
+                    <h3>Pay $5 & Unlock</h3>
+                    <p>If you like it, pay $5 to unlock all 3 scripts with trending sounds & hashtags.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-icon">4</div>
+                    <h3>Go Viral</h3>
+                    <p>Use your scripts to create content that gets millions of views.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ViralScriptFactory</h3>
+                    <p>Generating viral content since 2024</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#terms">Terms of Service</a>
+                    <a href="#refund">Refund Policy</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <a href="mailto:support@viralscriptfactory.com">support@viralscriptfactory.com</a>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ViralScriptFactory. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="modal">
+        <div class="modal-content">
+            <div class="loader"></div>
+            <p>Generating your viral scripts...</p>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content success">
+            <i class="fas fa-check-circle"></i>
+            <h3>Payment Successful!</h3>
+            <p>Your scripts are being generated...</p>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
+</body>
+</html>
