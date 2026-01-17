@@ -1,8 +1,8 @@
 // frontend/js/main.js
 // Configuration
 const config = {
-    backendUrl: 'https://your-backend.railway.app', // Will update after deployment
-    stripePublicKey: 'pk_test_your_stripe_key',
+    backendUrl: 'https://mock-backend-for-testing.com', // Will update after deployment
+    stripePublicKey: 'pk_test_51P...',
     paypalClientId: 'your_paypal_client_id'
 };
 
