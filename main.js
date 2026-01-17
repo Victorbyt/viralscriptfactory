@@ -2,7 +2,7 @@
 // Configuration
 const config = {
     backendUrl: 'https://mock-backend-for-testing.com', // Will update after deployment
-    stripePublicKey: 'pk_test_51P...',
+    stripePublicKey: 'pk_test_51Ppk_test_51SqcGhK1qkUZhqhH3aTyqeLAJ6RoLQT8bdKgiWPH2x1Odb54PryaOZSuixrtXda8varfiEIfSFM9exCPPuBxeK9H00zxyOE5Lv',
     paypalClientId: 'your_paypal_client_id'
 };
 
@@ -72,34 +72,28 @@ async function generateScripts() {
     
     showLoading();
     
-    try {
-        // In production, this would call your backend
-        // For now, simulate with mock data
-        const mockScript = generateMockScript(state.topic, state.platform);
-        
-        // Show preview
-        document.getElementById('previewScript').innerHTML = mockScript;
-        
-        // Store mock data (in production, this comes from backend)
-        state.scripts = [
-            mockScript,
-            generateMockScript(state.topic, state.platform),
-            generateMockScript(state.topic, state.platform)
+    // SIMULATE API CALL WITH TIMEOUT
+    setTimeout(() => {
+        // Generate mock scripts
+        const mockScripts = [
+            `🎯 HOOK: The secret to ${state.topic} that nobody tells you!\n\n🎵 SOUND: Use trending "${state.platform} sound" with 1M+ uses\n\n📱 PLATFORM: ${state.platform}\n\n🔥 HASHTAGS: #${state.topic.replace(/\s+/g, '')} #${state.platform} #viral\n\n💡 TIP: Start with a surprising fact to hook viewers in 3 seconds!`,
+            
+            `🎯 HOOK: I tried ${state.topic} for 30 days - results shocked me!\n\n🎵 SOUND: Popular ${state.platform} audio (check trending page)\n\n📱 PLATFORM: ${state.platform}\n\n🔥 HASHTAGS: #${state.topic.replace(/\s+/g, '')} #fyp #trending\n\n💡 TIP: Show before/after results for maximum engagement`,
+            
+            `🎯 HOOK: Stop making these ${state.topic} mistakes!\n\n🎵 SOUND: Viral ${state.platform} audio with 5M+ uses\n\n📱 PLATFORM: ${state.platform}\n\n🔥 HASHTAGS: #${state.topic.replace(/\s+/g, '')} #learnontiktok #hack\n\n💡 TIP: Use text overlays to emphasize key points`
         ];
         
-        // Initialize Stripe payment
-        await initializeStripe();
+        state.scripts = mockScripts;
+        document.getElementById('previewScript').innerHTML = 
+            `<div class="script-preview-content">${mockScripts[0]}</div>`;
         
-        // Move to step 2
         changeStep(2);
         hideLoading();
-    } catch (error) {
-        console.error('Error:', error);
-        hideLoading();
-        alert('Failed to generate script. Please try again.');
-    }
+        
+        // Log for debugging
+        console.log('Generated mock scripts for:', state.topic, state.platform);
+    }, 1500); // 1.5 second delay to simulate processing
 }
-
 // Initialize Stripe Elements
 async function initializeStripe() {
     try {
