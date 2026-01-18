@@ -265,5 +265,72 @@
     <script src="js/main.js"></script>
     <!-- PayPal SDK -->
     <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Script Generator</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .section { margin: 30px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .hidden { display: none; }
+        .loading { color: #666; font-style: italic; }
+        .error { color: #d00; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        input, select { padding: 10px; margin: 5px; width: 200px; }
+        .script-box { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .nav-buttons { display: flex; gap: 10px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>Script Generator</h1>
+    
+    <!-- Generator Section -->
+    <div id="generator" class="section">
+        <h2>Generate Scripts</h2>
+        <div>
+            <input type="text" id="topicInput" placeholder="Enter topic (e.g., fitness tips)">
+            <select id="platformSelect">
+                <option value="tiktok">TikTok</option>
+                <option value="youtube">YouTube</option>
+                <option value="instagram">Instagram</option>
+            </select>
+            <button id="generateBtn">Generate Scripts</button>
+        </div>
+        <div id="scriptCount"></div>
+    </div>
+    
+    <!-- Script Display Section -->
+    <div id="scriptContainer" class="section hidden">
+        <h2>Generated Scripts</h2>
+        <div id="scriptDisplay">
+            <div class="script-box">
+                <h3 id="scriptTitle">Script Title</h3>
+                <p id="scriptContent">Script content will appear here...</p>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <button id="prevBtn">Previous</button>
+            <span id="scriptCounter">0/0</span>
+            <button id="nextBtn">Next</button>
+        </div>
+    </div>
+    
+    <!-- Payment Section -->
+    <div id="paymentSection" class="section">
+        <h2>Get Full Access</h2>
+        <p>Unlock all features with our free trial</p>
+        <button id="freeTrialBtn">Start Free Trial</button>
+    </div>
+    
+    <!-- Add your main.js file -->
+    <script src="main.js"></script>
+</body>
+</html>
 </body>
 </html>
