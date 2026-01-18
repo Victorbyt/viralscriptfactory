@@ -62,7 +62,16 @@ function scrollToGenerator() {
 // Step 1: Generate Scripts
 async function generateScripts() {
     state.topic = document.getElementById('topic').value;
-    const platformEl = document.querySelector('input[name="platform"]:checked');
+   const previewElement = document.getElementById('previewScript');
+    previewElement.innerHTML = `
+        <div class="script-preview-content">
+            <h3>Your First Script (Free Preview):</h3>
+            <div class="script-card">
+                <div style="white-space: pre-wrap; font-family: monospace; padding: 20px; background: #f8fafc; border-radius: 10px;">
+                    ${state.scripts[0]}
+                </div>
+            </div>
+        </div>
     state.platform = platformEl ? platformEl.value : 'tiktok';
     
     if (!state.topic.trim()) {
