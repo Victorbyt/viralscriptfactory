@@ -8,27 +8,40 @@ const state = {
 };
 
 // ==================== DOM ELEMENTS ====================
-const elements = {
-    topicInput: document.getElementById('topicInput'),
-    platformSelect: document.getElementById('platformSelect'),
-    scriptContainer: document.getElementById('scriptContainer'),
-    generateBtn: document.getElementById('generateBtn'),
-    scriptDisplay: document.getElementById('scriptDisplay'),
-    scriptTitle: document.getElementById('scriptTitle'),
-    scriptContent: document.getElementById('scriptContent'),
-    prevBtn: document.getElementById('prevBtn'),
-    nextBtn: document.getElementById('nextBtn'),
-    scriptCounter: document.getElementById('scriptCounter'),
-    paymentSection: document.getElementById('paymentSection'),
-    freeTrialBtn: document.getElementById('freeTrialBtn'),
-    scriptCount: document.getElementById('scriptCount')
-};
+let elements = {};
+
+function initializeElements() {
+    elements = {
+        topicInput: document.getElementById('topicInput'),
+        platformSelect: document.getElementById('platformSelect'),
+        scriptContainer: document.getElementById('scriptContainer'),
+        generateBtn: document.getElementById('generateBtn'),
+        scriptDisplay: document.getElementById('scriptDisplay'),
+        scriptTitle: document.getElementById('scriptTitle'),
+        scriptContent: document.getElementById('scriptContent'),
+        prevBtn: document.getElementById('prevBtn'),
+        nextBtn: document.getElementById('nextBtn'),
+        scriptCounter: document.getElementById('scriptCounter'),
+        paymentSection: document.getElementById('paymentSection'),
+        freeTrialBtn: document.getElementById('freeTrialBtn'),
+        scriptCount: document.getElementById('scriptCount')
+    };
+    
+    // Log any missing elements for debugging
+    for (const [key, element] of Object.entries(elements)) {
+        if (!element) {
+            console.warn(`Element ${key} not found in DOM`);
+        }
+    }
+}
 
 // ==================== UTILITY FUNCTIONS ====================
 function scrollToGenerator() {
     const generatorSection = document.getElementById('generator');
     if (generatorSection) {
         generatorSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        console.warn('Generator section not found');
     }
 }
 
@@ -41,8 +54,20 @@ function scrollToPayment() {
 
 // ==================== SCRIPT GENERATION ====================
 function generateScripts() {
+    // Make sure elements are initialized
+    if (!elements.topicInput) {
+        initializeElements();
+    }
+    
+    // Check if topicInput exists
+    if (!elements.topicInput) {
+        console.error('Topic input element not found');
+        alert('Error: Topic input field not found on page');
+        return;
+    }
+    
     const topic = elements.topicInput.value.trim();
-    const platform = elements.platformSelect.value;
+    const platform = elements.platformSelect ? elements.platformSelect.value : 'tiktok';
     
     if (!topic) {
         alert('Please enter a topic');
@@ -55,17 +80,24 @@ function generateScripts() {
     state.currentScriptIndex = 0;
     
     // Show loading state
-    elements.scriptContainer.classList.remove('hidden');
-    elements.scriptDisplay.innerHTML = '<div class="loading">Generating scripts...</div>';
+    if (elements.scriptContainer) {
+        elements.scriptContainer.classList.remove('hidden');
+    }
     
-    // Generate mock scripts (in real app, this would be an API call)
+    if (elements.scriptDisplay) {
+        elements.scriptDisplay.innerHTML = '<div class="loading">Generating scripts...</div>';
+    }
+    
+    // Generate mock scripts
     setTimeout(() => {
         generateMockScripts();
         displayCurrentScript();
         updateNavigationButtons();
         
         // Scroll to scripts
-        elements.scriptContainer.scrollIntoView({ behavior: 'smooth' });
+        if (elements.scriptContainer) {
+            elements.scriptContainer.scrollIntoView({ behavior: 'smooth' });
+        }
     }, 1000);
 }
 
@@ -110,7 +142,9 @@ function generateMockScripts() {
 // ==================== SCRIPT DISPLAY ====================
 function displayCurrentScript() {
     if (state.scripts.length === 0) {
-        elements.scriptDisplay.innerHTML = '<div class="error">No scripts generated yet.</div>';
+        if (elements.scriptDisplay) {
+            elements.scriptDisplay.innerHTML = '<div class="error">No scripts generated yet.</div>';
+        }
         return;
     }
     
@@ -167,27 +201,38 @@ function initPayment() {
         return;
     }
     
-    // Mark payment as complete (in real app, this would redirect to Stripe)
+    // Mark payment as complete
     state.paymentComplete = true;
     
     // Show success message
     alert('Payment successful! You now have full access to all scripts.');
     
-    // Enable all features (in a real app, this would unlock premium features)
-    document.querySelectorAll('.premium-feature').forEach(feature => {
-        feature.classList.remove('locked');
-        feature.classList.add('unlocked');
-    });
-    
     // Scroll back to scripts
-    elements.scriptContainer.scrollIntoView({ behavior: 'smooth' });
+    if (elements.scriptContainer) {
+        elements.scriptContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function processPayment() {
+    // Fixed Stripe URL - only one https://
+    const stripeUrl = 'https://buy.stripe.com/test_6oU00kginbN30ldgo2gA800';
+    console.log('Opening payment URL:', stripeUrl);
+    window.open(stripeUrl, '_blank');
+    
+    // In a real app, you would handle the payment callback here
+    setTimeout(() => {
+        initPayment();
+    }, 2000);
 }
 
 // ==================== EVENT LISTENERS ====================
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize elements if they exist
+function setupEventListeners() {
+    initializeElements();
+    
     if (elements.generateBtn) {
         elements.generateBtn.addEventListener('click', generateScripts);
+    } else {
+        console.warn('Generate button not found');
     }
     
     if (elements.topicInput) {
@@ -215,24 +260,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     if (elements.freeTrialBtn) {
-        elements.freeTrialBtn.addEventListener('click', function() {
-            // Fixed Stripe URL - removed double "https"
-            const stripeUrl = 'https://www.stripe.com/test_6ou00kginbN30ldgo2gA800';
-            window.open(stripeUrl, '_blank');
-        });
+        elements.freeTrialBtn.addEventListener('click', processPayment);
     }
     
-    // Initialize with a default if needed
+    // Set default topic for testing
     if (elements.topicInput && !elements.topicInput.value) {
         elements.topicInput.value = 'fitness tips';
     }
-    
-    // Check for existing scripts
-    if (state.scripts.length > 0) {
-        displayCurrentScript();
-        updateNavigationButtons();
-    }
-});
+}
 
 // ==================== GLOBAL EXPORTS ====================
 // Make functions available globally for onclick handlers
@@ -241,21 +276,26 @@ window.generateScripts = generateScripts;
 window.nextScript = nextScript;
 window.prevScript = prevScript;
 window.initPayment = initPayment;
+window.processPayment = processPayment;
 window.generateMockScripts = generateMockScripts;
 window.displayFirstScript = displayFirstScript;
 
 // ==================== INITIALIZATION ====================
-// Auto-generate if there's a topic in the input on page load
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-        if (elements.topicInput && elements.topicInput.value) {
-            setTimeout(generateScripts, 500);
-        }
-    });
-} else {
-    if (elements.topicInput && elements.topicInput.value) {
-        setTimeout(generateScripts, 500);
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, setting up script generator...');
+    setupEventListeners();
+    
+    // Auto-generate if there's a topic in the input
+    if (elements.topicInput && elements.topicInput.value.trim()) {
+        setTimeout(generateScripts, 1000);
     }
+});
+
+// Fallback in case DOM is already loaded
+if (document.readyState !== 'loading') {
+    setTimeout(() => {
+        setupEventListeners();
+    }, 100);
 }
 
 console.log('Script Generator loaded successfully');
