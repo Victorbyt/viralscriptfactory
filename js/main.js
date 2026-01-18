@@ -62,16 +62,7 @@ function scrollToGenerator() {
 // Step 1: Generate Scripts
 async function generateScripts() {
     state.topic = document.getElementById('topic').value;
-   const previewElement = document.getElementById('previewScript');
-    previewElement.innerHTML = `
-        <div class="script-preview-content">
-            <h3>Your First Script (Free Preview):</h3>
-            <div class="script-card">
-                <div style="white-space: pre-wrap; font-family: monospace; padding: 20px; background: #f8fafc; border-radius: 10px;">
-                    ${state.scripts[0]}
-                </div>
-            </div>
-        </div>
+    const platformEl = document.querySelector('input[name="platform"]:checked');
     state.platform = platformEl ? platformEl.value : 'tiktok';
     
     if (!state.topic.trim()) {
@@ -81,27 +72,41 @@ async function generateScripts() {
     
     showLoading();
     
-    // SIMULATE API CALL WITH TIMEOUT
+    // Simulate API call
     setTimeout(() => {
-        // Generate mock scripts
-        const mockScripts = [
-            `🎯 HOOK: The secret to ${state.topic} that nobody tells you!\n\n🎵 SOUND: Use trending "${state.platform} sound" with 1M+ uses\n\n📱 PLATFORM: ${state.platform}\n\n🔥 HASHTAGS: #${state.topic.replace(/\s+/g, '')} #${state.platform} #viral\n\n💡 TIP: Start with a surprising fact to hook viewers in 3 seconds!`,
+        // Generate 3 mock scripts
+        state.scripts = [
+            `🎯 HOOK (0-3s): "Stop making this ${state.topic} mistake!"\n\n🎵 SOUND: Trending ${state.platform} audio (check trending page)\n\n📱 PLATFORM: ${state.platform}\n\n📝 TEXT OVERLAYS:\n1. Common mistake most people make\n2. The simple fix nobody talks about\n3. Pro tip for better results\n\n📢 CTA: Follow for more ${state.topic} tips!\n\n🔥 HASHTAGS: #${state.topic.replace(/\s+/g, '')} #${state.platform} #viral #fyp`,
             
-            `🎯 HOOK: I tried ${state.topic} for 30 days - results shocked me!\n\n🎵 SOUND: Popular ${state.platform} audio (check trending page)\n\n📱 PLATFORM: ${state.platform}\n\n🔥 HASHTAGS: #${state.topic.replace(/\s+/g, '')} #fyp #trending\n\n💡 TIP: Show before/after results for maximum engagement`,
+            `🎯 HOOK (0-3s): "I tried ${state.topic} for 7 days and here's what happened!"\n\n🎵 SOUND: Viral ${state.platform} sound with 5M+ uses\n\n📱 PLATFORM: ${state.platform}\n\n📝 TEXT OVERLAYS:\n1. Day 1-3: Initial challenges\n2. Day 4-6: Breakthrough moment\n3. Day 7: Amazing results\n\n📢 CTA: Save this for when you need it!\n\n🔥 HASHTAGS: #${state.topic.replace(/\s+/g, '')} #${state.platform} #trending #dailytips`,
             
-            `🎯 HOOK: Stop making these ${state.topic} mistakes!\n\n🎵 SOUND: Viral ${state.platform} audio with 5M+ uses\n\n📱 PLATFORM: ${state.platform}\n\n🔥 HASHTAGS: #${state.topic.replace(/\s+/g, '')} #learnontiktok #hack\n\n💡 TIP: Use text overlays to emphasize key points`
+            `🎯 HOOK (0-3s): "This ${state.topic} hack will change everything!"\n\n🎵 SOUND: Popular ${state.platform} audio from trending creators\n\n📱 PLATFORM: ${state.platform}\n\n📝 TEXT OVERLAYS:\n1. The problem with traditional approach\n2. The game-changing alternative\n3. How to implement it today\n\n📢 CTA: Tag a friend who needs this!\n\n🔥 HASHTAGS: #${state.topic.replace(/\s+/g, '')} #${state.platform}hack #lifehack #goals`
         ];
         
-        state.scripts = mockScripts;
-        document.getElementById('previewScript').innerHTML = 
-            `<div class="script-preview-content">${mockScripts[0]}</div>`;
+        // Display first script with proper formatting
+        const previewElement = document.getElementById('previewScript');
+        if (previewElement) {
+            previewElement.innerHTML = `
+                <div style="text-align: left;">
+                    <h3 style="color: #333; margin-bottom: 20px;">Your First Script (Free Preview):</h3>
+                    <div style="background: white; border-left: 4px solid #6366f1; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                        <div style="font-family: 'Courier New', monospace; white-space: pre-wrap; line-height: 1.6; color: #333;">
+                            ${state.scripts[0]}
+                        </div>
+                    </div>
+                    <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                        <i class="fas fa-info-circle"></i> Want all 3 scripts with trending sounds and hashtags?
+                    </p>
+                </div>
+            `;
+        }
         
         changeStep(2);
         hideLoading();
         
-        // Log for debugging
-        console.log('Generated mock scripts for:', state.topic, state.platform);
-    }, 1500); // 1.5 second delay to simulate processing
+        console.log('Generated scripts for:', state.topic);
+    }, 1500);
+} // 1.5 second delay to simulate processing
 }
 // Initialize Stripe Elements
 async function initializeStripe() {
